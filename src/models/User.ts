@@ -6,6 +6,7 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
     roles: { type: [String], enum: ['reader', 'journalist', 'editor', 'admin'], default: ['reader'] },
+    isVerified: { type: Boolean, default: false },
 }, { timestamps: true});
 
 const User = mongoose.model('User', userSchema);

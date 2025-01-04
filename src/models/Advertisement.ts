@@ -8,7 +8,7 @@ const advertisementSchema = new Schema({
     position: { type: String, enum: ['header', 'sidebar', 'footer'], required: true },
     createdAt: { type: Date, default: Date.now },
     expiresAt: { type: Date }
-});
+}, { timestamps: true });
 
 const Advertisement = mongoose.model('Advertisement', advertisementSchema);
 export default Advertisement;

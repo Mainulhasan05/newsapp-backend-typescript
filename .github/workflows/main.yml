@@ -14,3 +14,9 @@ jobs:
           server: ftp.mainulhasan05.xyz
           username: admin_news-api.mainulhasan05.xyz
           password: QIwhqkk$cM
+
+      - name: 📦 Install dependencies
+        run: npm install
+
+      - name: 🔨 Compile TypeScript
+        run: npx tsc

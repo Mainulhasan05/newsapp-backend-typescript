@@ -11,6 +11,6 @@ jobs:
       - name: 📂 Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          server: ftp.mainulhasan05.xyz;
+          server: ftp.mainulhasan05.xyz
           username: admin_news-api.mainulhasan05.xyz
           password: QIwhqkk$cM

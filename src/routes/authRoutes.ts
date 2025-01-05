@@ -6,6 +6,7 @@ import {
   assignRole,
   removeRole,
   changePassword,
+  refreshTokenController,
 } from '../controllers/authControllers';
 import { authenticate, authorize } from '../middlewares/authMiddleware';
 
@@ -17,5 +18,6 @@ router.get('/profile', authenticate, getProfile);
 router.post('/assign-role', authenticate, authorize('admin'), assignRole);
 router.post('/remove-role', authenticate, authorize('admin'), removeRole);
 router.post('/change-password', authenticate, changePassword);
+router.post('/refresh-token', refreshTokenController);
 
 export default router;

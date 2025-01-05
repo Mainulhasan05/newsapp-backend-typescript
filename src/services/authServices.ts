@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
+import {generateAccessToken,generateRefreshToken} from '../utils/generateToken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
@@ -58,4 +59,14 @@ export const changePassword = async (userId: string, oldPassword: string, newPas
 
   user.password = await bcrypt.hash(newPassword, 10);
   await user.save();
+};
+
+export const refreshToken = (token: string): string | null => {
+  try {
+    const decoded = jwt.verify(token, process.env.REFRESH_SECRET || 'your_refresh_secret') as jwt.JwtPayload;
+    const newAccessToken = generateAccessToken({ id: decoded.id, roles: decoded.roles });
+    return newAccessToken;
+  } catch (error) {
+    return null;
+  }
 };

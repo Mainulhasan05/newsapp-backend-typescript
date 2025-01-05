@@ -2,7 +2,7 @@ import e, { Request, Response } from 'express';
 import * as authService from '../services/authServices';
 import { sendResponse } from '../utils/sendResponse';
 import { AuthenticatedRequest } from '../types/AuthenticatedRequest';
-import generateToken from '../utils/generateToken';
+import {generateAccessToken,generateRefreshToken} from '../utils/generateToken';
 import setCookie from '../utils/setCookie';
 // Register User
 export const registerUser = async (req: Request, res: Response) => {
@@ -11,7 +11,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const user = await authService.registerUser({ name, email, password, roles });
 
     // Generate token
-    const token = generateToken({ id: user._id, roles: user.roles }, '1d');
+    const token = generateAccessToken({ id: user._id, roles: user.roles });
 
     // Set token in a secure cookie
     setCookie(res, 'news_auth_token',token, { httpOnly: true, secure: true, expires: new Date(Date.now() + 24 * 3600000) });
@@ -157,4 +157,35 @@ export const changePassword = async (req: AuthenticatedRequest, res: Response) =
       message: error.message,
     });
   }
+};
+
+export const refreshTokenController = (req: Request, res: Response) => {
+  const token = req.cookies.token; // Assuming the refresh token is stored in an HTTP-only cookie
+
+  if (!token) {
+    return sendResponse({
+      res,
+      status: 401,
+      success: false,
+      message: 'Refresh token missing',
+    });
+  }
+
+  const newAccessToken = authService.refreshToken(token);
+  if (!newAccessToken) {
+    return sendResponse({
+      res,
+      status: 403,
+      success: false,
+      message: 'Invalid refresh token',
+    });
+  }
+
+  sendResponse({
+    res,
+    status: 200,
+    success: true,
+    message: 'Access token refreshed successfully',
+    data: { accessToken: newAccessToken },
+  });
 };

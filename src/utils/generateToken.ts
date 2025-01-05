@@ -7,6 +7,6 @@ export const generateAccessToken = (payload:any): string => {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' }); // Short-lived access token
 };
 
-export const generateRefreshToken = (userId: string): string => {
-  return jwt.sign({ id: userId }, REFRESH_SECRET, { expiresIn: '7d' }); // Long-lived refresh token
+export const generateRefreshToken = (payload: any): string => {
+  return jwt.sign(payload, REFRESH_SECRET, { expiresIn: '7d' }); // Long-lived refresh token
 };

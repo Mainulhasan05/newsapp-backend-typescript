@@ -1,3 +1,4 @@
+import { refreshToken } from './../services/authServices';
 import e, { Request, Response } from 'express';
 import * as authService from '../services/authServices';
 import { sendResponse } from '../utils/sendResponse';
@@ -11,17 +12,19 @@ export const registerUser = async (req: Request, res: Response) => {
     const user = await authService.registerUser({ name, email, password, roles });
 
     // Generate token
-    const token = generateAccessToken({ id: user._id, roles: user.roles });
+    const token = generateRefreshToken({ id: user._id, roles: user.roles });
 
     // Set token in a secure cookie
-    setCookie(res, 'news_auth_token',token, { httpOnly: true, secure: true, expires: new Date(Date.now() + 24 * 3600000) });
+    setCookie(res, 'refresh_token',token, { httpOnly: true, secure: true, expires: new Date(Date.now() + 24 * 3600000) });
+
+    const accessToken = generateAccessToken({ id: user._id, roles: user.roles });
 
     sendResponse({
       res,
       status: 201,
       success: true,
       message: 'User registered successfully',
-      data: user,
+      data: {user,accessToken},
     });
   } catch (error: any) {
     sendResponse({
@@ -36,14 +39,20 @@ export const registerUser = async (req: Request, res: Response) => {
 // Login User
 export const loginUser = async (req: Request, res: Response) => {
   try {
+    
     const { email, password } = req.body;
-    const token = await authService.loginUser(email, password);
+    const user = await authService.loginUser(email, password);
+    const refreshToken = generateRefreshToken({ id: user._id, roles: user.roles });
+    
+    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true, expires: new Date(Date.now() + 7 * 24 * 3600000) });
+    const accessToken = generateAccessToken({ id: user._id, roles: user.roles });
+
     sendResponse({
       res,
       status: 200,
       success: true,
       message: 'Login successful',
-      data: { token },
+      data: { accessToken },
     });
   } catch (error: any) {
     sendResponse({
@@ -160,7 +169,7 @@ export const changePassword = async (req: AuthenticatedRequest, res: Response) =
 };
 
 export const refreshTokenController = (req: Request, res: Response) => {
-  const token = req.cookies.token; // Assuming the refresh token is stored in an HTTP-only cookie
+  const token = req.cookies.refresh_token; // Assuming the refresh token is stored in an HTTP-only cookie
 
   if (!token) {
     return sendResponse({

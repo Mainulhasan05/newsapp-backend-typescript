@@ -24,6 +24,19 @@ const categorySchema = new Schema({
         ref: 'Category',
         required: false,
         default: null
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false
+    },
+    status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'active'
+    },
+    sortValue: {
+        type: Number,
+        default: 0
     }
 
 }, { timestamps: true });

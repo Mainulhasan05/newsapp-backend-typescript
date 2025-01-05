@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as authService from '../services/authServices';
 import { sendResponse } from '../utils/sendResponse';
-
+import { AuthenticatedRequest } from '../types/AuthenticatedRequest';
 // Register User
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -47,7 +47,7 @@ export const loginUser = async (req: Request, res: Response) => {
 };
 
 // Get Profile
-export const getProfile = async (req: Request, res: Response) => {
+export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user.id;
     const profile = await authService.getProfile(userId);
@@ -113,7 +113,7 @@ export const removeRole = async (req: Request, res: Response) => {
 };
 
 // Change Password
-export const changePassword = async (req: Request, res: Response) => {
+export const changePassword = async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user.id;
     const { oldPassword, newPassword } = req.body;

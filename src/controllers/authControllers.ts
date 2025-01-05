@@ -49,7 +49,15 @@ export const loginUser = async (req: Request, res: Response) => {
 // Get Profile
 export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const userId = req.user.id;
+    if (!req.user) {
+      return sendResponse({
+        res,
+        status: 400,
+        success: false,
+        message: 'User is not authenticated',
+      });
+    }
+    const userId = req?.user.id;
     const profile = await authService.getProfile(userId);
     sendResponse({
       res,
@@ -115,6 +123,14 @@ export const removeRole = async (req: Request, res: Response) => {
 // Change Password
 export const changePassword = async (req: AuthenticatedRequest, res: Response) => {
   try {
+    if (!req.user) {
+      return sendResponse({
+        res,
+        status: 400,
+        success: false,
+        message: 'User is not authenticated',
+      });
+    }
     const userId = req.user.id;
     const { oldPassword, newPassword } = req.body;
     await authService.changePassword(userId, oldPassword, newPassword);

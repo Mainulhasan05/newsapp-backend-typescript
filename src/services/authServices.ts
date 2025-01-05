@@ -5,12 +5,9 @@ import User from '../models/User';
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
 
 // Register User
-export const registerUser = async ({ name, email, password, roles }: any) => {
-  if (roles && roles.includes('admin')) {
-    throw new Error('Cannot register as admin directly');
-  }
+export const registerUser = async ({ name, email, password }: any) => {
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = new User({ name, email, password: hashedPassword, roles });
+  const user = new User({ name, email, password: hashedPassword });
   return await user.save();
 };
 

@@ -1,12 +1,21 @@
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 import * as authService from '../services/authServices';
 import { sendResponse } from '../utils/sendResponse';
 import { AuthenticatedRequest } from '../types/AuthenticatedRequest';
+import generateToken from '../utils/generateToken';
+import setCookie from '../utils/setCookie';
 // Register User
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { name, email, password, roles } = req.body;
     const user = await authService.registerUser({ name, email, password, roles });
+
+    // Generate token
+    const token = generateToken({ id: user._id, roles: user.roles }, '1d');
+
+    // Set token in a secure cookie
+    setCookie(res, 'news_auth_token',token, { httpOnly: true, secure: true, expires: new Date(Date.now() + 24 * 3600000) });
+
     sendResponse({
       res,
       status: 201,

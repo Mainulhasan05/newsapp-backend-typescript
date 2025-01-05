@@ -8,6 +8,9 @@ import helmet from 'helmet';
 import cors from 'cors';
 import morgan from 'morgan';
 
+import routes from './routes/index';
+
+
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
@@ -31,6 +34,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
+
+app.use('/api', routes);
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the server');
+});
 
 
 const server = http.createServer(app);

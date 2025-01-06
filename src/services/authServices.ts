@@ -48,6 +48,16 @@ export const removeRole = async (userId: string, role: string) => {
   return await user.save();
 };
 
+// Update Profile
+export const updateProfile = async (userId: string, data: any) => {
+  const user = await User.findById(userId || '');
+  if (!user) throw new Error('User not found');
+
+  Object.assign(user, data);
+  return await user.save();
+}
+
+
 // Change Password
 export const changePassword = async (userId: string, oldPassword: string, newPassword: string) => {
   const user = await User.findById(userId).select('+password');

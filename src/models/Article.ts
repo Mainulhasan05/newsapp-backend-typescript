@@ -10,6 +10,7 @@ const articleSchema = new Schema({
     isFeatured: { type: Boolean, default: false },
     status: { type: String, enum: ['draft', 'published', 'archived'], default: 'draft' },
     publishedAt: { type: Date },
+    viewCount: { type: Number, default: 0 },
     
 }, { timestamps: true});
 

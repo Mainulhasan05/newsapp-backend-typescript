@@ -15,7 +15,13 @@ export const registerUser = async (req: Request, res: Response) => {
     const token = generateRefreshToken({ id: user._id, roles: user.roles });
 
     // Set token in a secure cookie
-    setCookie(res, 'refresh_token',token, { httpOnly: true, secure: true, expires: new Date(Date.now() + 24 * 3600000) });
+    
+    setCookie(res, 'refresh_token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      expires: new Date(Date.now() + 7 * 24 * 3600000),
+    });
 
     const accessToken = generateAccessToken({ id: user._id, roles: user.roles });
 
@@ -143,6 +149,37 @@ export const removeRole = async (req: Request, res: Response) => {
     });
   }
 };
+
+// updateProfile
+export const updateProfile = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    if (!req.user) {
+      return sendResponse({
+        res,
+        status: 400,
+        success: false,
+        message: 'User is not authenticated',
+      });
+    }
+    const userId = req.user.id;
+    const { name, email } = req.body;
+    const updatedUser = await authService.updateProfile(userId, { name, email });
+    sendResponse({
+      res,
+      status: 200,
+      success: true,
+      message: 'Profile updated successfully',
+      data: updatedUser,
+    });
+  } catch (error: any) {
+    sendResponse({
+      res,
+      status: 400,
+      success: false,
+      message: error.message,
+    });
+  }
+}
 
 // Change Password
 export const changePassword = async (req: AuthenticatedRequest, res: Response) => {

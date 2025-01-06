@@ -162,8 +162,8 @@ export const updateProfile = async (req: AuthenticatedRequest, res: Response) =>
       });
     }
     const userId = req.user.id;
-    const { name, email } = req.body;
-    const updatedUser = await authService.updateProfile(userId, { name, email });
+    const { name, email, bio } = req.body;
+    const updatedUser = await authService.updateProfile(userId, { name, email, bio });
     sendResponse({
       res,
       status: 200,

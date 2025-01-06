@@ -18,7 +18,7 @@ router.post('/login', loginUser);
 router.get('/profile', authenticate, getProfile);
 router.post('/assign-role', authenticate, authorize('admin'), assignRole);
 router.post('/remove-role', authenticate, authorize('admin'), removeRole);
-router.post('/change-password', authenticate, changePassword);
+router.put('/change-password', authenticate, changePassword);
 router.post('/refresh-token', refreshTokenController);
 // routes for updating user profile
 router.put('/update-profile', authenticate, updateProfile);

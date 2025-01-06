@@ -43,6 +43,18 @@ const categorySchema = new Schema({
         ref: 'User',
         required: true
     },
+    metaTitle: {
+        type: String,
+        required: false
+    },
+    metaDescription: {
+        type: String,
+        required: false
+    },
+    metaKeywords: {
+        type: String,
+        required: false
+    }
 
 }, { timestamps: true });
 

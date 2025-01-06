@@ -44,7 +44,13 @@ export const loginUser = async (req: Request, res: Response) => {
     const user = await authService.loginUser(email, password);
     const refreshToken = generateRefreshToken({ id: user._id, roles: user.roles });
     
-    res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: true, expires: new Date(Date.now() + 7 * 24 * 3600000) });
+    res.cookie('refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      expires: new Date(Date.now() + 7 * 24 * 3600000),
+    });
+    
     const accessToken = generateAccessToken({ id: user._id, roles: user.roles });
 
     sendResponse({

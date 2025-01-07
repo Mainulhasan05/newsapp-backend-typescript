@@ -8,9 +8,13 @@ import { AuthenticatedRequest } from '../types/AuthenticatedRequest';
 // Create a new category
 export const createCategory = async (req: AuthenticatedRequest, res: Response) => {
     try {
-        if(req.user){
+        if(req.user?.id){
             req.body.createdBy = req.user.id;
         }
+        else{
+            throw new Error('User not authenticated');
+        }
+
         const {
             name,
             description,

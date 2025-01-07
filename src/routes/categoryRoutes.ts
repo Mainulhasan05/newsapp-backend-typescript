@@ -1,10 +1,11 @@
 import express from 'express';
 import { createCategory, getCategories, getCategoryById, updateCategory, deleteCategory } from '../controllers/categoryControllers';
+import { authenticate, authorize } from '../middlewares/authMiddleware';
 
 const router = express.Router();
 
 // Create a new category
-router.post('/', createCategory);
+router.post('/', authenticate,authorize('admin'), createCategory);
 
 // Get all categories with pagination and search
 router.get('/', getCategories);

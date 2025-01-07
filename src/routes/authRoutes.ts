@@ -8,6 +8,7 @@ import {
   changePassword,
   refreshTokenController,
   updateProfile,
+  getUsersController
 } from '../controllers/authControllers';
 import { authenticate, authorize } from '../middlewares/authMiddleware';
 
@@ -22,5 +23,7 @@ router.put('/change-password', authenticate, changePassword);
 router.post('/refresh-token', refreshTokenController);
 // routes for updating user profile
 router.put('/update-profile', authenticate, updateProfile);
+// add a route for getting all users, use pagination and search
+router.get('/users', authenticate, authorize('admin'), getUsersController);
 
 export default router;

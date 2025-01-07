@@ -35,7 +35,7 @@ export const authenticate = (req: AuthenticatedRequest, res: Response, next: Nex
 export const authorize = (...roles: string[]) => {
     return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
       const userRoles = req.user?.roles;
-  
+      
       if (!userRoles || !roles.some(role => userRoles.includes(role))) {
         return sendResponse({
           res,

@@ -29,13 +29,11 @@ export const getProfile = async (userId: string) => {
 };
 
 // Assign Role
-export const assignRole = async (userId: string, role: string) => {
+export const assignRole = async (userId: string, roles: string[]) => {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
-
-  if (!user.roles.includes(role)) {
-    user.roles.push(role);
-  }
+  // assign roles to the user
+  user.roles = roles;
   return await user.save();
 };
 
@@ -80,4 +78,22 @@ export const refreshToken = (token: string)=> {
   } catch (error: any) {
     console.log(error.message);
   }
+};
+
+
+// Get Users
+export const getUsers = async (page: number, limit: number, search: string) => {
+  const skip = (page - 1) * limit;
+  const users = await User.find({
+    name: { $regex: search, $options: 'i' },
+  }).select('-password').skip(skip).limit(limit);
+  const totalUsers = await User.countDocuments({
+    name: { $regex: search, $options: 'i' },
+  });
+  return {
+    users,
+    totalUsers,
+    totalPages: Math.ceil(totalUsers / limit),
+    currentPage: page,
+  };
 };

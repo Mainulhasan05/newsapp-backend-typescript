@@ -109,8 +109,8 @@ export const getProfile = async (req: AuthenticatedRequest, res: Response) => {
 // Assign Role
 export const assignRole = async (req: Request, res: Response) => {
   try {
-    const { userId, role } = req.body;
-    const updatedUser = await authService.assignRole(userId, role);
+    const { userId, roles } = req.body;
+    const updatedUser = await authService.assignRole(userId, roles);
     sendResponse({
       res,
       status: 200,
@@ -241,4 +241,27 @@ export const refreshTokenController = (req: Request, res: Response) => {
     message: 'Access token refreshed successfully',
     data: { accessToken: newAccessToken },
   });
+};
+
+
+// Get all users
+export const getUsersController = async (req: Request, res: Response) => {
+  try {
+    const { page = 1, limit = 15, search ="" } = req.query;
+    const users = await authService.getUsers(page as number, limit as number, search as string);
+    sendResponse({
+      res,
+      status: 200,
+      success: true,
+      message: 'Users retrieved successfully',
+      data: users,
+    });
+  } catch (error: any) {
+    sendResponse({
+      res,
+      status: 400,
+      success: false,
+      message: error.message,
+    });
+  }
 };

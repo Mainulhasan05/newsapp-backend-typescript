@@ -113,6 +113,8 @@ export const updateCategory = async (req: Request, res: Response) => {
         const { id } = req.params;
         const updateData = req.body;
 
+        console.log(updateData);
+
         
 
         const updatedCategory = await categoryService.updateCategoryService(id, updateData);

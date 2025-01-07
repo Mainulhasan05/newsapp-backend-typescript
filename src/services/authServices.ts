@@ -70,12 +70,14 @@ export const changePassword = async (userId: string, oldPassword: string, newPas
   await user.save();
 };
 
-export const refreshToken = (token: string): string | null => {
+export const refreshToken = (token: string)=> {
   try {
+    
     const decoded = jwt.verify(token, process.env.REFRESH_SECRET || 'your_refresh_secret') as jwt.JwtPayload;
     const newAccessToken = generateAccessToken({ id: decoded.id, roles: decoded.roles });
+    
     return newAccessToken;
-  } catch (error) {
-    return null;
+  } catch (error: any) {
+    console.log(error.message);
   }
 };

@@ -212,6 +212,7 @@ export const changePassword = async (req: AuthenticatedRequest, res: Response) =
 };
 
 export const refreshTokenController = (req: Request, res: Response) => {
+  
   const token = req.cookies.refresh_token; // Assuming the refresh token is stored in an HTTP-only cookie
 
   if (!token) {

@@ -35,6 +35,7 @@ export const getGalleriesService = async (page: number, search?: string) => {
       const images = await Gallery.find()
         .skip(skip)
         .limit(pageSize)
+        .sort({ createdAt: -1 })
         .exec();
   
       // Calculate total pages

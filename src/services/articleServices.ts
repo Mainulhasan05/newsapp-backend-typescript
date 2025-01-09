@@ -18,8 +18,14 @@ export const getArticlesService = async (page: number, title: string) => {
     const skip = (page - 1) * limit;
     const query = title ? { title: { $regex: title, $options: 'i' } } : {};
 
-    const articles = await Article.find(query).skip(skip).limit(limit).sort({ createdAt: -1 }).populate({ path: 'author', select: 'name' })
-    .populate({ path: 'category', select: 'name' });
+    const articles = await Article.find(query)
+  .skip(skip)
+  .limit(limit)
+  .sort({ createdAt: -1 })
+  .select('-content -tags -metaTitle -metaDescription -metaKeywords')
+  .populate({ path: 'author', select: 'name' })
+  .populate({ path: 'category', select: 'name' });
+
     const totalArticles = await Article.countDocuments(query);
 
     return {

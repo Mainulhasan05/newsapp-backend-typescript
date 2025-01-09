@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as galleryService from '../services/galleryServices';
 import { sendResponse } from '../utils/sendResponse';
 import { AuthenticatedRequest } from '../types/AuthenticatedRequest';
-import { AnyArray } from 'mongoose';
+
 
 // const gallerySchema = new Schema({
 //     title: { type: String, required: true },

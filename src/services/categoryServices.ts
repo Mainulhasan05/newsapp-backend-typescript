@@ -21,7 +21,7 @@ export const createCategoryService = async (categoryData: any) => {
 
 // Get all categories with pagination and optional search by name
 export const getCategoriesService = async (page: number, name: string) => {
-    const limit = 10;
+    const limit = 30;
     const skip = (page - 1) * limit;
     const query = name ? { name: { $regex: name, $options: 'i' } } : {};
 

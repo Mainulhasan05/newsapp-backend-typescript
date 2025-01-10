@@ -1,5 +1,7 @@
 import Article from '../models/Article';
+import Gallery from '../models/Gallery';
 import generateSlug from '../utils/generateSlug';
+import mongoose from 'mongoose';
 
 // Create a new article
 export const createArticleService = async (articleData: any) => {
@@ -9,8 +11,23 @@ export const createArticleService = async (articleData: any) => {
         articleData.slug = `${articleData.slug}-${Date.now()}`;
     }
     const article = new Article(articleData);
+    updateGalleryAssociationCount(articleData.featuredImage, article._id);
     return await article.save();
 };
+
+const updateGalleryAssociationCount = async (featuredImage: string, articleId: mongoose.Types.ObjectId) => {
+    try {
+        const gallery = await Gallery.findOne({ imageUrl: featuredImage });
+        if (gallery) {
+            gallery.associatedArticles.push(articleId);
+            gallery.save();
+        }
+    } catch (error) {
+        console.error('Error updating gallery association count:', error);
+    }
+
+    
+}
 
 // Get all articles with pagination and optional search by title
 export const getArticlesService = async (page: number, title: string) => {

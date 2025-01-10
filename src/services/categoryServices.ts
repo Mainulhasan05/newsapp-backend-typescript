@@ -21,14 +21,14 @@ export const createCategoryService = async (categoryData: any) => {
 
 // Get all categories with pagination and optional search by name
 export const getCategoriesService = async (page: number, name: string) => {
-    const limit = 30;
+    const limit = 60;
     const skip = (page - 1) * limit;
-    const query = name ? { name: { $regex: name, $options: 'i' } } : {};
+    const query = name ? { name: { $regex: name, $options: 'i' },  } : {};
 
     const categories = await Category.find(query)
         .skip(skip)
-        .limit(limit)
-        .sort({ createdAt: -1 });
+        .limit(limit);
+        // .sort({ createdAt: -1 });
 
     const totalCategories = await Category.countDocuments(query);
 

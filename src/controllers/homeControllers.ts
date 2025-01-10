@@ -21,3 +21,49 @@ export const getHomePage = async (req: Request, res: Response) => {
         });
     }
 };
+
+// getArticlesByCategory maintain proper pagination
+export const getArticlesByCategory = async (req: Request, res: Response) => {
+    try {
+        const { slug } = req.params;
+
+        const { page = 1, title = '' } = req.query;
+        const articles = await homeServices.getArticlesByCategoryService(Number(page), title.toString(), slug);
+        return sendResponse({
+            res,
+            status: 200,
+            success: true,
+            message: 'Articles fetched successfully',
+            data: articles,
+        });
+    } catch (error: any) {
+        return sendResponse({
+            res,
+            status: 400,
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+// getArticleBySlug
+export const getArticleBySlug = async (req: Request, res: Response) => {
+    try {
+        const { slug } = req.params;
+        const article = await homeServices.getArticleBySlugService(slug);
+        return sendResponse({
+            res,
+            status: 200,
+            success: true,
+            message: 'Article fetched successfully',
+            data: article,
+        });
+    } catch (error: any) {
+        return sendResponse({
+            res,
+            status: 400,
+            success: false,
+            message: error.message,
+        });
+    }
+};

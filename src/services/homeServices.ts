@@ -7,9 +7,48 @@ export const getHomeService = async () => {
     try {
         const featuredArticle = await Article.findOne({ status: 'published', isFeatured:true }).select('-content').populate({ path: 'category', select: 'name' }).sort({ createdAt: -1 });
         // latest news except featured news
-        const latestArticles = await Article.find({ status: 'published', isFeatured:false }).limit(5).select('-content').populate({ path: 'category', select: 'name' }).sort({ createdAt: -1 });
-
-        return {  featuredArticle, latestArticles };
+        const latestArticles = await Article.find({ status: 'published', isFeatured:false }).limit(3).select('-content').populate({ path: 'category', select: 'name' }).sort({ createdAt: -1 });
+        const allArticles = await Article.aggregate([
+            { $match: { status: 'published' } }, // Filter only published articles
+            { 
+              $lookup: { 
+                from: 'categories', 
+                localField: 'category', 
+                foreignField: '_id', 
+                as: 'category' 
+              }
+            }, // Join with the category collection
+            { $unwind: '$category' }, // Deconstruct the category array
+            { $sort: { 'createdAt': -1 } }, // Sort by createdAt in descending order
+            { 
+              $group: { 
+                _id: '$category._id', 
+                name: { $first: '$category.name' }, 
+                articles: { 
+                  $push: { 
+                    title: '$title', 
+                    slug: '$slug', 
+                    createdAt: '$createdAt', 
+                    featuredImage: '$featuredImage' 
+                  } 
+                }
+              }
+            }, // Group by category and collect necessary fields
+            { 
+              $project: { 
+                _id: 0, 
+                category: { id: '$_id', name: '$name' }, 
+                articles: { $slice: ['$articles', 5] } 
+              }
+            }, // Limit to the latest 5 articles per category
+            { $addFields: { articlesCount: { $size: '$articles' } } }, // Add a field for the number of articles
+            { $sort: { articlesCount: -1 } }, // Sort categories by articles count in descending order
+            { $match: { 'articles.0': { $exists: true } } } // Only include categories with articles
+          ]);
+          
+          
+          
+        return {  allArticles,featuredArticle, latestArticles };
     } catch (error:any) {
         throw new Error(error.message);
     }

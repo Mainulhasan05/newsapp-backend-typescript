@@ -35,7 +35,7 @@ interface MulterRequest extends Request {
       }
   
       const resizedBuffer: Buffer = await sharp(file.buffer)
-        .resize({ width: 1000, height: 1000 })
+        .resize({ width: 1600, height: 1600 })
         .toBuffer();
   
       cloudinary.uploader.upload_stream(

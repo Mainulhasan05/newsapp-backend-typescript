@@ -5,9 +5,11 @@ import Article from "../models/Article";
 
 export const getHomeService = async () => {
     try {
-        const featuredArticles = await Article.find({ status: 'published', isFeatured:true }).limit(5).select('-content').populate({ path: 'category', select: 'name' }).sort({ createdAt: -1 });
+        const featuredArticle = await Article.findOne({ status: 'published', isFeatured:true }).select('-content').populate({ path: 'category', select: 'name' }).sort({ createdAt: -1 });
+        // latest news except featured news
+        const latestArticles = await Article.find({ status: 'published', isFeatured:false }).limit(3).select('-content').populate({ path: 'category', select: 'name' }).sort({ createdAt: -1 });
 
-        return {  featuredArticles };
+        return {  featuredArticle, latestArticles };
     } catch (error:any) {
         throw new Error(error.message);
     }

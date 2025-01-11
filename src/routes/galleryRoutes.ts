@@ -1,13 +1,20 @@
 import { upload,uploadToCloudinary } from './../middlewares/cloudinaryImageUpload';
+import { uploadToImageKit, upload as imageUpload } from '../middlewares/imageKitImageUpload';
 import { Router, Request, Response } from "express";
 
 import { createGallery, getGalleries, getGalleryById,  deleteGallery } from "../controllers/galleryControllers";
+
 import { authenticate, authorize } from "../middlewares/authMiddleware";
 
 const router = Router();
 
-router.post("/",authenticate, authorize('admin'),upload.single('image'),uploadToCloudinary,createGallery);
+router.post("/",authenticate, authorize('admin', 'journalist', 'editor'),upload.single('image'),uploadToCloudinary,createGallery);
 
+// Create a new gallery
+router.post('/imagekit', authenticate, authorize('admin'), imageUpload.single('image'), uploadToImageKit, (req: Request, res: Response): void => {
+    console.log(req.body);
+    res.status(200).json({ message: 'Image uploaded successfully' });
+});
 
 // Get all galleries with pagination and search
 router.get('/', getGalleries);
@@ -16,6 +23,6 @@ router.get('/', getGalleries);
 router.get('/:id', getGalleryById);
 
 // Delete a gallery by ID
-router.delete('/:id', deleteGallery);
+router.delete('/:id',authenticate, authorize('admin'), deleteGallery);
 
 export default router;

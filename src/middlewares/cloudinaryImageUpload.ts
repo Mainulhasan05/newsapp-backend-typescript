@@ -39,7 +39,7 @@ interface MulterRequest extends Request {
         if (file.size > 1 * 1024 * 1024) { // Check if the file size is greater than 1MB
             // console.log('File size is greater than 1MB, reducing quality...');
             processedBuffer = await sharp(file.buffer)
-                .webp({ quality: 80 }) // Convert to WebP with reduced quality
+                .webp({ quality: 40 }) // Convert to WebP with reduced quality
                 .toBuffer();
         } else {
             // console.log('File size is within the limit, converting to WebP...');

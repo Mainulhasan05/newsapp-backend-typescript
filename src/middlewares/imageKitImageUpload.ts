@@ -29,8 +29,7 @@ export const upload: Multer = multer({
         fileSize: 5 * 1024 * 1024 // 5MB
     },
     fileFilter: (req, file, cb) => {
-        console.log("hello vai aisilam");
-        console.log(file);
+        
         if (file.mimetype.startsWith('image/')) {
             cb(null, true);
         } else {
@@ -53,7 +52,7 @@ export const uploadToImageKit = async (req: Request, res: Response, next: NextFu
         if (file.size > 1 * 1024 * 1024) { // Check if the file size is greater than 1MB
             // console.log('File size is greater than 1MB, converting to WebP...');
             processedBuffer = await sharp(file.buffer)
-                .webp({ quality: 80 }) // Convert to WebP with 80% quality
+                .webp({ quality: 40 }) // Convert to WebP with 40% quality
                 .toBuffer();
         } else {
             // console.log('File size is within the limit, uploading as is...');

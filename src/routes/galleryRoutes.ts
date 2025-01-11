@@ -12,8 +12,8 @@ router.post("/",authenticate, authorize('admin', 'journalist', 'editor'),upload.
 
 // Create a new gallery
 router.post('/imagekit', authenticate, authorize('admin'), imageUpload.single('image'), uploadToImageKit, (req: Request, res: Response): void => {
-    console.log(req.body);
-    res.status(200).json({ message: 'Image uploaded successfully' });
+    
+    res.status(200).json({ message: 'Image uploaded successfully', success: true, data: req.body.imageUrl });
 });
 
 // Get all galleries with pagination and search

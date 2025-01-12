@@ -65,14 +65,23 @@ export const updateArticleService = async (id: string, updateData: any) => {
     if (updateData.title) {
         updateData.slug = generateSlug(updateData.title);
     }
+    // check if featured image is changed, update gallery association count, if not, don't update gallery association count
+    if (updateData.featuredImage) {
+        if(updateData.featuredImage !== updateData.oldFeaturedImage) {
+            await Gallery.updateMany({ associatedArticles: { $in: [id] } }, { $pull: { associatedArticles: id } });
+            updateGalleryAssociationCount(updateData.featuredImage, new mongoose.Types.ObjectId(id));
+        }
+    }
     const existingArticle = await Article.findOne({ slug: updateData.slug });
     if (existingArticle && existingArticle._id.toString() !== id) {
         updateData.slug = `${updateData.slug}-${Date.now()}`;
     }
+    
     return await Article.findByIdAndUpdate(id, updateData, { new: true });
 };
 
 // Delete an article
 export const deleteArticleService = async (id: string) => {
+    await Gallery.updateMany({ associatedArticles: { $in: [id] } }, { $pull: { associatedArticles: id } });
     return await Article.findByIdAndDelete(id);
 };

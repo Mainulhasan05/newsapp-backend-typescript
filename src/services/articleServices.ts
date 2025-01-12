@@ -33,7 +33,7 @@ const updateGalleryAssociationCount = async (featuredImage: string, articleId: m
 
 // Get all articles with pagination and optional search by title
 export const getArticlesService = async (page: number, title: string) => {
-    const limit = 10;
+    const limit = 20;
     const skip = (page - 1) * limit;
     const query = title ? { title: { $regex: title, $options: 'i' } } : {};
 

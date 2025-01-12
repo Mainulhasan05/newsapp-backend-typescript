@@ -3,6 +3,7 @@ const articleSchema = new Schema({
     title: { type: String, required: true },
     slug: { type: String, required: true, unique: true },
     content: { type: String, required: true },
+    shortDescription: { type: String },
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     tags: { type: [String], default: [] },
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },

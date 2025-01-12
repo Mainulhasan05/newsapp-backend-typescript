@@ -10,6 +10,8 @@ export const createArticleService = async (articleData: any) => {
     if (existingArticle) {
         articleData.slug = `${articleData.slug}-${Date.now()}`;
     }
+    
+    articleData.shortDescription = articleData.content.substring(0, 200);
     const article = new Article(articleData);
     updateGalleryAssociationCount(articleData.featuredImage, article._id);
     return await article.save();

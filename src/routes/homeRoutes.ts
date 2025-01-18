@@ -1,7 +1,7 @@
 import { Router} from "express";
 
 // homepage api, no authentication required
-import { getHomePage, getArticlesByCategory,getArticleBySlug } from "../controllers/homeControllers";
+import { getHomePage, getArticlesByCategory,getArticleBySlug, getCategories } from "../controllers/homeControllers";
 
 const router = Router();
 
@@ -10,6 +10,8 @@ router.get('/', getHomePage);
 // get category wise articles
 router.get('/category/:slug', getArticlesByCategory);
 router.get('/news/:slug', getArticleBySlug);
+
+router.get('/categories', getCategories);
 
 
 export default router;

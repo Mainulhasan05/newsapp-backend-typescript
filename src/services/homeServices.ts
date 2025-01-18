@@ -104,3 +104,26 @@ export const getArticleBySlugService = async (slug: string) => {
         throw new Error(error.message);
     }
 };
+
+// get 10 categories, sortValue field
+
+export const getCategoriesService = async (page: number = 1, name: string = '', limit: number = 10) => {
+    try {
+        
+        const skip = (page - 1) * limit;
+        const query = name ? { name: { $regex: name, $options: 'i' },  } : {};
+        const categories = await Category.find(query)
+            .skip(skip)
+            .limit(limit)
+            .sort({ sortValue: -1 });
+        const totalCategories = await Category.countDocuments(query);
+        return {
+            categories,
+            totalCategories,
+            totalPages: Math.ceil(totalCategories / limit),
+            currentPage: page
+        }
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+}

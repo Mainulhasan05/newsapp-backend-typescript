@@ -25,7 +25,7 @@ export const createGalleryService = async (title: string, description: string, i
 
 export const getGalleriesService = async (page: number, search?: string) => {
     try {
-      const pageSize = 100; // Number of items per page
+      const pageSize = 1000; // Number of items per page
       const skip = (page - 1) * pageSize;
   
       // Find the total number of documents matching the query

@@ -67,3 +67,25 @@ export const getArticleBySlug = async (req: Request, res: Response) => {
         });
     }
 };
+
+// getCategories
+export const getCategories = async (req: Request, res: Response) => {
+    try {
+        const { page = 1, name = '', limit = 10 } = req.query;
+        const categories = await homeServices.getCategoriesService(Number(page), name.toString(), Number(limit));
+        return sendResponse({
+            res,
+            status: 200,
+            success: true,
+            message: 'Categories fetched successfully',
+            data: categories,
+        });
+    } catch (error: any) {
+        return sendResponse({
+            res,
+            status: 400,
+            success: false,
+            message: error.message,
+        });
+    }
+};
